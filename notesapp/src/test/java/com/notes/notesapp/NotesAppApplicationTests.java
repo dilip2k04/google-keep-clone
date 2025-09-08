@@ -1,0 +1,14 @@
+package com.notes.notesapp;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class NotesAppApplicationTests {
+
+    @Test
+    void contextLoads() {
+        // This just tests if Spring context loads
+    }
+
+}
