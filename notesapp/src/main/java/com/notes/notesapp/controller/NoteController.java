@@ -1,8 +1,8 @@
 package com.notes.notesapp.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +17,6 @@ import com.notes.notesapp.repository.NoteRepository;
 
 @RestController
 @RequestMapping("/api/notes")
-@CrossOrigin(origins = "http://localhost:5173") // your React dev server
 public class NoteController {
 
     private final NoteRepository noteRepository;
@@ -33,6 +32,8 @@ public class NoteController {
 
     @PostMapping
     public Note createNote(@RequestBody Note note) {
+        note.setCreatedAt(LocalDateTime.now());
+        note.setUpdatedAt(LocalDateTime.now());
         return noteRepository.save(note);
     }
 
@@ -42,6 +43,7 @@ public class NoteController {
         note.setTitle(noteDetails.getTitle());
         note.setContent(noteDetails.getContent());
         note.setColor(noteDetails.getColor());
+        note.setUpdatedAt(LocalDateTime.now());
         return noteRepository.save(note);
     }
 
