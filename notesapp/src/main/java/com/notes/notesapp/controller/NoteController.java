@@ -25,13 +25,14 @@ public class NoteController {
         this.noteRepository = noteRepository;
     }
 
-    @GetMapping
-    public List<Note> getAllNotes() {
-        return noteRepository.findAll();
+    @GetMapping("/user/{userId}")
+    public List<Note> getNotesByUser(@PathVariable String userId) {
+        return noteRepository.findByUserId(userId);
     }
 
-    @PostMapping
-    public Note createNote(@RequestBody Note note) {
+    @PostMapping("/user/{userId}")
+    public Note createNoteForUser(@PathVariable String userId, @RequestBody Note note) {
+        note.setUserId(userId);
         note.setCreatedAt(LocalDateTime.now());
         note.setUpdatedAt(LocalDateTime.now());
         return noteRepository.save(note);
@@ -39,8 +40,10 @@ public class NoteController {
 
     @PutMapping("/{id}")
     public Note updateNote(@PathVariable String id, @RequestBody Note noteDetails) {
-        Note note = noteRepository.findById(id).orElseThrow();
+        Note note = noteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Note not found"));
         note.setTitle(noteDetails.getTitle());
+        note.setType(noteDetails.getType());
         note.setContent(noteDetails.getContent());
         note.setColor(noteDetails.getColor());
         note.setUpdatedAt(LocalDateTime.now());
