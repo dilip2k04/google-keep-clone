@@ -1,2 +1,44 @@
-body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 0; }
-a { color: blue; }
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f0f0f0;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #333;
+  color: #fff;
+}
+
+button {
+  margin-left: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+}
+
+.note-form, .auth-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: 1rem auto;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.note-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.note {
+  padding: 1rem;
+  border-radius: 8px;
+  width: 200px;
+  color: #000;
+}

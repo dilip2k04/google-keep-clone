@@ -1,51 +1,39 @@
-import { useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 
-export default function NoteForm({ fetchNotes }) {
+export default function NoteForm({ onSubmit }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [color, setColor] = useState("#ffffff");
+  const [color, setColor] = useState("#fff");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      await axios.post("http://localhost:8080/api/notes", { title, content, color });
-      setTitle("");
-      setContent("");
-      setColor("#ffffff");
-      fetchNotes();
-    } catch (error) {
-      console.error(error);
-    }
+    onSubmit({ title, content, color });
+    setTitle("");
+    setContent("");
+    setColor("#fff");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4">
+    <form onSubmit={handleSubmit} className="note-form">
       <input
         type="text"
         placeholder="Title"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="border p-2 mr-2 rounded w-1/3"
         required
+        onChange={(e) => setTitle(e.target.value)}
       />
-      <input
-        type="text"
+      <textarea
         placeholder="Content"
         value={content}
-        onChange={(e) => setContent(e.target.value)}
-        className="border p-2 mr-2 rounded w-1/2"
         required
+        onChange={(e) => setContent(e.target.value)}
       />
       <input
         type="color"
         value={color}
         onChange={(e) => setColor(e.target.value)}
-        className="mr-2"
       />
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-        Add Note
-      </button>
+      <button type="submit">Add Note</button>
     </form>
   );
 }
