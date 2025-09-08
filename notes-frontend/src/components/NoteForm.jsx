@@ -3,11 +3,10 @@ import React, { useState, useEffect } from "react";
 export default function NoteForm({ onSubmit, editingNote, onCancelEdit }) {
   const [title, setTitle] = useState("");
   const [type, setType] = useState("text");
-  const [content, setContent] = useState(""); // for text
+  const [content, setContent] = useState("");
   const [checklist, setChecklist] = useState([{ text: "", done: false }]);
   const [files, setFiles] = useState([]);
 
-  // Load editing note into form
   useEffect(() => {
     if (editingNote) {
       setTitle(editingNote.title);
@@ -24,58 +23,73 @@ export default function NoteForm({ onSubmit, editingNote, onCancelEdit }) {
     }
   }, [editingNote]);
 
-  const handleAddChecklistItem = () => {
-    setChecklist([...checklist, { text: "", done: false }]);
-  };
-
+  const handleAddChecklistItem = () => setChecklist([...checklist, { text: "", done: false }]);
   const handleChecklistChange = (index, value) => {
     const newChecklist = [...checklist];
     newChecklist[index].text = value;
     setChecklist(newChecklist);
   };
-
   const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files).map((file) => ({
+    const selectedFiles = Array.from(e.target.files).map(file => ({
       name: file.name,
-      url: URL.createObjectURL(file), // for demo, real app should upload to server
+      url: URL.createObjectURL(file) // replace with server upload URL in real app
     }));
     setFiles(selectedFiles);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let noteContent;
-    if (type === "text") noteContent = content;
-    else if (type === "checklist") noteContent = checklist;
-    else if (type === "file") noteContent = files;
-
+    let noteContent = type === "text" ? content : type === "checklist" ? checklist : files;
     onSubmit({
       id: editingNote?.id,
       title,
       type,
       content: noteContent,
-      color: "#f5f5f5",
+      color: "#f5f5f5"
     });
-
-    // reset form
-    setTitle("");
-    setType("text");
-    setContent("");
-    setChecklist([{ text: "", done: false }]);
-    setFiles([]);
+    setTitle(""); setType("text"); setContent(""); setChecklist([{ text: "", done: false }]); setFiles([]);
     if (onCancelEdit) onCancelEdit();
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: "20px", padding: "10px", border: "1px solid #ccc" }}>
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        marginBottom: "20px",
+        padding: "20px",
+        border: "1px solid #ccc",
+        borderRadius: "8px",
+        backgroundColor: "#f9f9f9",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
+      }}
+    >
       <input
+        style={{
+          width: "100%",
+          padding: "10px",
+          marginBottom: "10px",
+          borderRadius: "4px",
+          border: "1px solid #ccc",
+          fontSize: "14px"
+        }}
         type="text"
         placeholder="Title"
         value={title}
         required
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={e => setTitle(e.target.value)}
       />
-      <select value={type} onChange={(e) => setType(e.target.value)}>
+      <select
+        style={{
+          width: "100%",
+          padding: "10px",
+          marginBottom: "10px",
+          borderRadius: "4px",
+          border: "1px solid #ccc",
+          fontSize: "14px"
+        }}
+        value={type}
+        onChange={e => setType(e.target.value)}
+      >
         <option value="text">Text</option>
         <option value="checklist">Checklist</option>
         <option value="file">File</option>
@@ -83,33 +97,98 @@ export default function NoteForm({ onSubmit, editingNote, onCancelEdit }) {
 
       {type === "text" && (
         <textarea
+          style={{
+            width: "100%",
+            padding: "10px",
+            marginBottom: "10px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+            fontSize: "14px",
+            height: "80px"
+          }}
           placeholder="Content"
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={e => setContent(e.target.value)}
         />
       )}
 
       {type === "checklist" && (
-        <div>
+        <div style={{ marginBottom: "10px" }}>
           {checklist.map((item, index) => (
             <input
               key={index}
               type="text"
               placeholder={`Item ${index + 1}`}
               value={item.text}
-              onChange={(e) => handleChecklistChange(index, e.target.value)}
+              onChange={e => handleChecklistChange(index, e.target.value)}
+              style={{
+                width: "100%",
+                padding: "8px",
+                marginBottom: "5px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+                fontSize: "14px"
+              }}
             />
           ))}
-          <button type="button" onClick={handleAddChecklistItem}>Add Item</button>
+          <button
+            type="button"
+            onClick={handleAddChecklistItem}
+            style={{
+              padding: "6px 12px",
+              borderRadius: "4px",
+              border: "none",
+              backgroundColor: "#1976d2",
+              color: "#fff",
+              cursor: "pointer",
+              marginTop: "5px"
+            }}
+          >
+            Add Item
+          </button>
         </div>
       )}
 
       {type === "file" && (
-        <input type="file" multiple onChange={handleFileChange} />
+        <input
+          type="file"
+          multiple
+          onChange={handleFileChange}
+          style={{ marginBottom: "10px" }}
+        />
       )}
 
-      <button type="submit">{editingNote ? "Update" : "Create"} Note</button>
-      {editingNote && <button type="button" onClick={onCancelEdit}>Cancel</button>}
+      <div>
+        <button
+          type="submit"
+          style={{
+            padding: "8px 15px",
+            borderRadius: "4px",
+            border: "none",
+            backgroundColor: "#1976d2",
+            color: "#fff",
+            cursor: "pointer",
+            marginRight: "10px"
+          }}
+        >
+          {editingNote ? "Update" : "Create"} Note
+        </button>
+        {editingNote && (
+          <button
+            type="button"
+            onClick={onCancelEdit}
+            style={{
+              padding: "8px 15px",
+              borderRadius: "4px",
+              border: "none",
+              backgroundColor: "#ccc",
+              cursor: "pointer"
+            }}
+          >
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   );
 }
